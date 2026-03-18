@@ -1,5 +1,6 @@
 -- [[ MonPhopuakMung HUB - FREE VERSION ]] --
 
+return
 
 if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
 
