@@ -1,7 +1,6 @@
--- [[ MonPhopuakMung HUB - FREE VERSION ]] --
+local guiParent = (gethui and gethui()) or pcall(function() return game.CoreGui end) and game.CoreGui or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
-
-if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
+if guiParent:FindFirstChild("FluentToggle") then guiParent.FluentToggle:Destroy() end
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Players = game:GetService("Players")
@@ -18,7 +17,7 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
-local ToggleButton = Instance.new("ScreenGui", game.CoreGui)
+local ToggleButton = Instance.new("ScreenGui", guiParent)
 ToggleButton.Name = "FluentToggle"
 ToggleButton.ResetOnSpawn = false
 
@@ -36,7 +35,7 @@ local UICorner = Instance.new("UICorner", MainButton)
 UICorner.CornerRadius = UDim.new(0, 12)
 
 MainButton.MouseButton1Click:Connect(function()
-    for _, gui in pairs(game.CoreGui:GetChildren()) do
+    for _, gui in pairs(guiParent:GetChildren()) do
         if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "FluentToggle" then
             gui.Enabled = not gui.Enabled
         end
