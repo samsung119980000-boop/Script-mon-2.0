@@ -1,6 +1,5 @@
 -- [[ MonPhopuakMung HUB - FREE VERSION ]] --
 
-fuck you why do u use it free
 
 if game.CoreGui:FindFirstChild("FluentToggle") then game.CoreGui.FluentToggle:Destroy() end
 
