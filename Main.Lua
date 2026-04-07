@@ -293,6 +293,103 @@ Tabs.Misc:AddButton({
         ItemDropdown:SetValues(getInventoryItems())
     end
 })
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local selectedItem = nil
+
+local function getInventoryItems()
+    local items = {}
+    local seen = {}
+
+    if player:FindFirstChild("Backpack") then
+        for _, item in ipairs(player.Backpack:GetChildren()) do
+            if item:IsA("Tool") and not seen[item.Name] then
+                table.insert(items, item.Name)
+                seen[item.Name] = true
+            end
+        end
+    end
+
+    if player.Character then
+        for _, item in ipairs(player.Character:GetChildren()) do
+            if item:IsA("Tool") and not seen[item.Name] then
+                table.insert(items, item.Name)
+                seen[item.Name] = true
+            end
+        end
+    end
+
+    return items
+end
+
+local ItemDropdown = Tabs.Misc:AddDropdown("ItemDropdown", {
+    Title = "Select Item to Drop",
+    Description = "",
+    Values = getInventoryItems(),
+    Multi = false,
+    Default = nil,
+})
+
+ItemDropdown:OnChanged(function(Value)
+    selectedItem = Value
+end)
+
+local function updateDropdown()
+    ItemDropdown:SetValues(getInventoryItems())
+end
+
+-- Auto Refresh: Detect items added/removed
+if player:FindFirstChild("Backpack") then
+    player.Backpack.ChildAdded:Connect(updateDropdown)
+    player.Backpack.ChildRemoved:Connect(updateDropdown)
+end
+
+player.CharacterAdded:Connect(function(char)
+    char.ChildAdded:Connect(updateDropdown)
+    char.ChildRemoved:Connect(updateDropdown)
+    
+    local backpack = player:WaitForChild("Backpack")
+    backpack.ChildAdded:Connect(updateDropdown)
+    backpack.ChildRemoved:Connect(updateDropdown)
+end)
+
+if player.Character then
+    player.Character.ChildAdded:Connect(updateDropdown)
+    player.Character.ChildRemoved:Connect(updateDropdown)
+end
+
+-- Fast Equip & Drop Logic
+Tabs.Misc:AddButton({
+    Title = "Drop All Selected Items",
+    Description = "Equips items one by one and drops them fast",
+    Callback = function()
+        if not selectedItem then return end
+        
+        local char = player.Character
+        if not char then return end
+        
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        if not humanoid then return end
+
+        -- Drop what is currently held if it matches
+        local currentTool = char:FindFirstChildOfClass("Tool")
+        if currentTool and currentTool.Name == selectedItem and currentTool.CanBeDropped then
+            currentTool.Parent = workspace
+        end
+
+        -- Equip and drop from backpack fast
+        local backpack = player:FindFirstChild("Backpack")
+        if backpack then
+            for _, item in ipairs(backpack:GetChildren()) do
+                if item:IsA("Tool") and item.Name == selectedItem and item.CanBeDropped then
+                    humanoid:EquipTool(item)
+                    task.wait(0.05) -- Delay นิดนึงให้เกมอัปเดตว่าถือของแล้ว
+                    item.Parent = workspace
+                end
+            end
+        end
+    end
+})
 
 
 Tabs.Misc:AddButton({
