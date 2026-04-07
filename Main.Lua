@@ -1,4 +1,4 @@
-
+local guiParent = game:GetService("CoreGui")
 if guiParent:FindFirstChild("FluentToggle") then guiParent.FluentToggle:Destroy() end
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
@@ -95,9 +95,15 @@ local function updateItemESP(plr)
     if itemESP and found then
         if not tag then
             tag = Instance.new("BillboardGui", plr.Character.Head)
-            tag.Name = "ItemESP"; tag.Size = UDim2.new(0, 150, 0, 30); tag.AlwaysOnTop = true; tag.ExtentsOffset = Vector3.new(0, 3, 0)
+            tag.Name = "ItemESP"
+            tag.Size = UDim2.new(0, 150, 0, 30)
+            tag.AlwaysOnTop = true
+            tag.ExtentsOffset = Vector3.new(0, 3, 0)
             local text = Instance.new("TextLabel", tag)
-            text.Size = UDim2.new(1,0,1,0); text.BackgroundTransparency = 1; text.TextColor3 = Color3.fromRGB(255, 255, 0); text.TextScaled = true
+            text.Size = UDim2.new(1,0,1,0)
+            text.BackgroundTransparency = 1
+            text.TextColor3 = Color3.fromRGB(255, 255, 0)
+            text.TextScaled = true
             text.Text = "⭐ " .. plr.Name .. " มี: " .. found
         else
             local text = tag:FindFirstChildOfClass("TextLabel")
