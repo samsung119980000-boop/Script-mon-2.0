@@ -358,34 +358,16 @@ if player.Character then
     player.Character.ChildRemoved:Connect(updateDropdown)
 end
 
--- Fast Equip & Drop Logic
+
 Tabs.Misc:AddButton({
-    Title = "Drop All Selected Items",
-    Description = "Equips items one by one and drops them fast",
+    Title = "Drop Item (กดทิ้งไอเทมที่ถืออยู่)",
+    Description = "เทียบเท่ากับการกดปุ่ม Backspace",
     Callback = function()
-        if not selectedItem then return end
-        
         local char = player.Character
-        if not char then return end
-        
-        local humanoid = char:FindFirstChildOfClass("Humanoid")
-        if not humanoid then return end
-
-        -- Drop what is currently held if it matches
-        local currentTool = char:FindFirstChildOfClass("Tool")
-        if currentTool and currentTool.Name == selectedItem and currentTool.CanBeDropped then
-            currentTool.Parent = workspace
-        end
-
-        -- Equip and drop from backpack fast
-        local backpack = player:FindFirstChild("Backpack")
-        if backpack then
-            for _, item in ipairs(backpack:GetChildren()) do
-                if item:IsA("Tool") and item.Name == selectedItem and item.CanBeDropped then
-                    humanoid:EquipTool(item)
-                    task.wait(0.05) -- Delay นิดนึงให้เกมอัปเดตว่าถือของแล้ว
-                    item.Parent = workspace
-                end
+        if char then
+            local tool = char:FindFirstChildOfClass("Tool")
+            if tool and tool.CanBeDropped then
+                tool.Parent = workspace
             end
         end
     end
