@@ -294,49 +294,6 @@ Tabs.Misc:AddButton({
     end
 })
 
-Tabs.Misc:AddButton({
-    Title = "Drop All Selected",
-    Callback = function()
-        if not selectedItem then return end
-
-        local function dropItem(item)
-            if item:IsA("Tool") and item.Name == selectedItem then
-                item.Parent = workspace
-            end
-        end
-
-        for _, item in ipairs(player.Backpack:GetChildren()) do
-            dropItem(item)
-        end
-
-        if player.Character then
-            for _, item in ipairs(player.Character:GetChildren()) do
-                dropItem(item)
-            end
-        end
-
-        ItemDropdown:SetValues(getInventoryItems())
-    end
-})
-
-
-local followTargetName = nil
-local followConnection = nil
-
-local function stopFollowing()
-    if followConnection then
-        followConnection:Disconnect()
-        followConnection = nil
-    end
-end
-
-local FollowDropdown = Tabs.Misc:AddDropdown("FollowPlayerDropdown", {
-    Title = "Select Player to Follow",
-    Values = getPlrs(),
-    Callback = function(Value)
-        followTargetName = Value
-    end
-})
 
 Tabs.Misc:AddButton({
     Title = "Refresh Follow List",
