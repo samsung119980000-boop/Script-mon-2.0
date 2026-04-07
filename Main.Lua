@@ -1,9 +1,3 @@
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-LocalPlayer:Kick(".....")
-
-local guiParent = (gethui and gethui()) or pcall(function() return game.CoreGui end) and game.CoreGui or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
 if guiParent:FindFirstChild("FluentToggle") then guiParent.FluentToggle:Destroy() end
 
