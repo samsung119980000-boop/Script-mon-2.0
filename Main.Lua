@@ -64,6 +64,17 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
         end
     end)
 end)
+    local autoSam = false
+    Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
+        autoSam = v
+        if autoSam then
+            task.spawn(function()
+                local remote = game:GetService("ReplicatedStorage"):WaitForChild("Connections"):WaitForChild("Claim_Sam")
+                while autoSam do pcall(function() remote:FireServer("Claim1") end) task.wait(3) end
+            end)
+        end
+    end)
+
 
 local wantedItems = {
     ["Rare Box"]=true, ["Ultra Rare Box"]=true, ["Chilly Fruit"]=true, ["Vampire Fruit"]=true,
