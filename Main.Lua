@@ -189,7 +189,7 @@ end
 local selectedPlr = nil
 local function getPlrs()
     local t = {}
-    for _,p in pairs(game.Players:GetPlayers()) do 
+    for _,p in pairs(Players:GetPlayers()) do 
         if p ~= player then table.insert(t, p.Name) end 
     end
     if #t == 0 then table.insert(t, "No other players") end
@@ -207,7 +207,7 @@ Tabs.Player:AddButton({Title = "Refresh Player List", Callback = function() PDro
 Tabs.Player:AddButton({
     Title = "Teleport to Player",
     Callback = function()
-        local target = game.Players:FindFirstChild(selectedPlr)
+        local target = Players:FindFirstChild(selectedPlr)
         if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then 
             player.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame 
         end
@@ -248,53 +248,7 @@ Tabs.Misc:AddToggle("IJ", {Title = "Infinite Jump (กระโดดรัว�
 end)
 
 Tabs.Misc:AddParagraph({ Title = "Assist Tools", Content = "ระบบทิ้งของและติดตามผู้เล่น" })
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local selectedItem = nil
 
-local function getInventoryItems()
-    local items = {}
-    local seen = {}
-
-    for _, item in ipairs(player.Backpack:GetChildren()) do
-        if item:IsA("Tool") and not seen[item.Name] then
-            table.insert(items, item.Name)
-            seen[item.Name] = true
-        end
-    end
-
-    if player.Character then
-        for _, item in ipairs(player.Character:GetChildren()) do
-            if item:IsA("Tool") and not seen[item.Name] then
-                table.insert(items, item.Name)
-                seen[item.Name] = true
-            end
-        end
-    end
-
-    return items
-end
-
-local ItemDropdown = Tabs.Misc:AddDropdown("ItemDropdown", {
-    Title = "Select Item",
-    Description = "",
-    Values = getInventoryItems(),
-    Multi = false,
-    Default = nil,
-})
-
-ItemDropdown:OnChanged(function(Value)
-    selectedItem = Value
-end)
-
-Tabs.Misc:AddButton({
-    Title = "Refresh Items",
-    Callback = function()
-        ItemDropdown:SetValues(getInventoryItems())
-    end
-})
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
 local selectedItem = nil
 
 local function getInventoryItems()
@@ -324,7 +278,6 @@ end
 
 local ItemDropdown = Tabs.Misc:AddDropdown("ItemDropdown", {
     Title = "Select Item to Drop",
-    Description = "",
     Values = getInventoryItems(),
     Multi = false,
     Default = nil,
@@ -357,6 +310,12 @@ if player.Character then
     player.Character.ChildRemoved:Connect(updateDropdown)
 end
 
+Tabs.Misc:AddButton({
+    Title = "Refresh Items",
+    Callback = function()
+        updateDropdown()
+    end
+})
 
 Tabs.Misc:AddButton({
     Title = "Drop Item (กดทิ้งไอเทมที่ถืออยู่)",
@@ -372,6 +331,21 @@ Tabs.Misc:AddButton({
     end
 })
 
+local followTargetName = nil
+local followConnection = nil
+
+local function stopFollowing()
+    if followConnection then
+        followConnection:Disconnect()
+        followConnection = nil
+    end
+end
+
+local FollowDropdown = Tabs.Misc:AddDropdown("FollowDropdown", {
+    Title = "Select Player to Follow",
+    Values = getPlrs(),
+    Callback = function(v) followTargetName = v end
+})
 
 Tabs.Misc:AddButton({
     Title = "Refresh Follow List",
@@ -380,7 +354,7 @@ Tabs.Misc:AddButton({
 
 Tabs.Misc:AddToggle("AutoFollow", {Title = "Auto Follow (ตามหลัง 8 Studs)", Default = false}):OnChanged(function(v)
     if v and followTargetName then
-        local target = game.Players:FindFirstChild(followTargetName)
+        local target = Players:FindFirstChild(followTargetName)
         if target then
             followConnection = RunService.RenderStepped:Connect(function()
                 if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
