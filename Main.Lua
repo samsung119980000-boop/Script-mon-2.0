@@ -46,6 +46,7 @@ local Tabs = {
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
     Player = Window:AddTab({ Title = "Player", Icon = "user" }),
     Misc = Window:AddTab({ Title = "Misc", Icon = "settings" })
+    Sever = Window:AddTab({ Title = "Sever" })
 }
 
 local autoClick = false
@@ -391,6 +392,11 @@ Tabs.Misc:AddToggle("AutoFollow", {Title = "Auto Follow (ตามจนขอ�
         stopFollowing()
     end
 end)
+    Tabs.Server:AddButton({Title = "Copy Current Job ID", Callback = function() if setclipboard then setclipboard(tostring(game.JobId)) Fluent:Notify({Title = "Copied!", Content = "Job ID copied to clipboard.", Duration = 3}) else Fluent:Notify({Title = "Error", Content = "Executor doesn't support setclipboard.", Duration = 3}) end end})
+
+    local targetJobId = ""
+    Tabs.Server:AddInput("InputJobId", {Title = "Enter Job ID", Default = "", Placeholder = "Paste Job ID here...", Numeric = false, Finished = false, Callback = function(Value) targetJobId = Value end})
+    Tabs.Server:AddButton({Title = "Join Server", Callback = function() if targetJobId ~= "" then Fluent:Notify({Title = "Teleporting...", Content = "Joining target server.", Duration = 5}) pcall(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, targetJobId, player) end) else Fluent:Notify({Title = "Error", Content = "Please enter a Job ID first.", Duration = 3}) end end})
 
 Window:SelectTab(1)
 
