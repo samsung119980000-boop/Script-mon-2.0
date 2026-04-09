@@ -338,8 +338,8 @@ Tabs.Misc:AddButton({
 })
 
 Tabs.Misc:AddButton({
-    Title = "Drop Item (กดทิ้งไอเทมที่ถืออยู่)",
-    Description = "เทียบเท่ากับการกดปุ่ม Backspace",
+    Title = "Drop Item ",
+    Description = " Backspace",
     Callback = function()
         local char = player.Character
         if char then
