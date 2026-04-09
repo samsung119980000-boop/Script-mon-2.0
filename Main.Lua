@@ -338,7 +338,6 @@ local function updateDropdown()
     ItemDropdown:SetValues(getInventoryItems())
 end
 
--- Auto Refresh: Detect items added/removed
 if player:FindFirstChild("Backpack") then
     player.Backpack.ChildAdded:Connect(updateDropdown)
     player.Backpack.ChildRemoved:Connect(updateDropdown)
