@@ -4,6 +4,7 @@ if guiParent:FindFirstChild("FluentToggle") then guiParent.FluentToggle:Destroy(
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
 local player = Players.LocalPlayer
 
 local Window = Fluent:CreateWindow({
@@ -45,8 +46,8 @@ local Tabs = {
     Main = Window:AddTab({ Title = "Home", Icon = "home" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "map-pin" }),
     Player = Window:AddTab({ Title = "Player", Icon = "user" }),
-    Misc = Window:AddTab({ Title = "Misc", Icon = "settings" })
-    Sever = Window:AddTab({ Title = "Sever" })
+    Misc = Window:AddTab({ Title = "Misc", Icon = "settings" }),
+    Server = Window:AddTab({ Title = "Server", Icon = "server" })
 }
 
 local autoClick = false
@@ -65,17 +66,17 @@ Tabs.Main:AddToggle("AutoClick", {Title = "Auto Click", Default = false}):OnChan
         end
     end)
 end)
-    local autoSam = false
-    Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
-        autoSam = v
-        if autoSam then
-            task.spawn(function()
-                local remote = game:GetService("ReplicatedStorage"):WaitForChild("Connections"):WaitForChild("Claim_Sam")
-                while autoSam do pcall(function() remote:FireServer("Claim1") end) task.wait(3) end
-            end)
-        end
-    end)
 
+local autoSam = false
+Tabs.Main:AddToggle("AutoSam", {Title = "Auto Sam", Default = false}):OnChanged(function(v)
+    autoSam = v
+    if autoSam then
+        task.spawn(function()
+            local remote = game:GetService("ReplicatedStorage"):WaitForChild("Connections"):WaitForChild("Claim_Sam")
+            while autoSam do pcall(function() remote:FireServer("Claim1") end) task.wait(3) end
+        end)
+    end
+end)
 
 local wantedItems = {
     ["Rare Box"]=true, ["Ultra Rare Box"]=true, ["Chilly Fruit"]=true, ["Vampire Fruit"]=true,
@@ -192,7 +193,6 @@ local tpLocations = {
     ["IslandTREEABIGHOUSE"] = CFrame.new(1107.45, 217.20, 3353.74),
     ["IslandCrescent"] = CFrame.new(3185.51, 217.00, 1526.23),
     ["Island12"] = CFrame.new(4832.99, 570.00, -7127.42)
-
 }
 
 for name, cf in pairs(tpLocations) do
@@ -392,11 +392,44 @@ Tabs.Misc:AddToggle("AutoFollow", {Title = "Auto Follow (ตามจนขอ�
         stopFollowing()
     end
 end)
-    Tabs.Server:AddButton({Title = "Copy Current Job ID", Callback = function() if setclipboard then setclipboard(tostring(game.JobId)) Fluent:Notify({Title = "Copied!", Content = "Job ID copied to clipboard.", Duration = 3}) else Fluent:Notify({Title = "Error", Content = "Executor doesn't support setclipboard.", Duration = 3}) end end})
 
-    local targetJobId = ""
-    Tabs.Server:AddInput("InputJobId", {Title = "Enter Job ID", Default = "", Placeholder = "Paste Job ID here...", Numeric = false, Finished = false, Callback = function(Value) targetJobId = Value end})
-    Tabs.Server:AddButton({Title = "Join Server", Callback = function() if targetJobId ~= "" then Fluent:Notify({Title = "Teleporting...", Content = "Joining target server.", Duration = 5}) pcall(function() TeleportService:TeleportToPlaceInstance(game.PlaceId, targetJobId, player) end) else Fluent:Notify({Title = "Error", Content = "Please enter a Job ID first.", Duration = 3}) end end})
+Tabs.Server:AddButton({
+    Title = "Copy Current Job ID", 
+    Callback = function() 
+        if setclipboard then 
+            setclipboard(tostring(game.JobId)) 
+            Fluent:Notify({Title = "Copied!", Content = "Job ID copied to clipboard.", Duration = 3}) 
+        else 
+            Fluent:Notify({Title = "Error", Content = "Executor doesn't support setclipboard.", Duration = 3}) 
+        end 
+    end
+})
+
+local targetJobId = ""
+Tabs.Server:AddInput("InputJobId", {
+    Title = "Enter Job ID", 
+    Default = "", 
+    Placeholder = "Paste Job ID here...", 
+    Numeric = false, 
+    Finished = false, 
+    Callback = function(Value) 
+        targetJobId = Value 
+    end
+})
+
+Tabs.Server:AddButton({
+    Title = "Join Server", 
+    Callback = function() 
+        if targetJobId ~= "" then 
+            Fluent:Notify({Title = "Teleporting...", Content = "Joining target server.", Duration = 5}) 
+            pcall(function() 
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, targetJobId, player) 
+            end) 
+        else 
+            Fluent:Notify({Title = "Error", Content = "Please enter a Job ID first.", Duration = 3}) 
+        end 
+    end
+})
 
 Window:SelectTab(1)
 
