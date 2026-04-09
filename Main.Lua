@@ -352,7 +352,7 @@ Tabs.Misc:AddButton({
     Callback = function() FollowDropdown:SetValues(getPlrs()) end
 })
 
-Tabs.Misc:AddToggle("AutoFollow", {Title = "Auto Follow (ตามหลัง 8 Studs)", Default = false}):OnChanged(function(v)
+Tabs.Misc:AddToggle("AutoFollow", {Title = "Auto Follow (ตามจนขอร้อง2stud)", Default = false}):OnChanged(function(v)
     if v and followTargetName then
         local target = Players:FindFirstChild(followTargetName)
         if target then
@@ -361,7 +361,7 @@ Tabs.Misc:AddToggle("AutoFollow", {Title = "Auto Follow (ตามหลัง 8
                     local myChar = player.Character
                     if myChar and myChar:FindFirstChild("HumanoidRootPart") then
                         local targetHRP = target.Character.HumanoidRootPart
-                        myChar.HumanoidRootPart.CFrame = targetHRP.CFrame * CFrame.new(0, 0, 8)
+                        myChar.HumanoidRootPart.CFrame = targetHRP.CFrame * CFrame.new(0, 0, 2)
                     end
                 else
                     stopFollowing()
