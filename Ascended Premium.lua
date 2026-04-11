@@ -83,8 +83,12 @@ L2.Draggable = true
 sound.Parent = L2
 sound.SoundId = "rbxassetid://965305329"
 L2.MouseButton1Click:Connect(function()
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
     sound:Play()
+    for _, gui in pairs(game.CoreGui:GetChildren()) do
+        if gui:IsA("ScreenGui") and gui:FindFirstChild("Frame") and gui.Name ~= "MainGui" then
+            gui.Enabled = not gui.Enabled
+        end
+    end
 end)
 
 local Section = Tabs.MainTab:AddSection("Main Utilities")
