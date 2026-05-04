@@ -169,6 +169,7 @@ local wantedItems = {
     ["Gum Fruit"]=true, ["Dark Fruit"]=true, ["Rumble Fruit"]=true, ["Gravity Fruit"]=true,
 
     ["Venom Fruit"]=true, ["Magma Fruit"]=true, ["Gas Fruit"]=true, ["Hollow Fruit"]=true, ["Flame Fruit"]=true
+    ["Alice Fruit"]=true, ["Luck Fruit"]=true, 
 
 }
 
